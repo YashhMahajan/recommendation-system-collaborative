@@ -1,0 +1,23 @@
+{
+  "model_type": "SVD",
+  "best_params": {
+    "n_factors": 50,
+    "n_epochs": 20,
+    "lr_all": 0.005,
+    "reg_all": 0.02
+  },
+  "performance": {
+    "rmse": 0.7929645813730791,
+    "mae": 0.6003573589719022,
+    "baseline_rmse": 0.85,
+    "baseline_mae": 0.6003573589719022
+  },
+  "dataset_info": {
+    "n_users": 138493,
+    "n_items": 15444,
+    "n_ratings": 16904793,
+    "sparsity": 0.9920964493415808
+  },
+  "training_date": "2026-03-24T19:46:14.203543",
+  "version": "1.0"
+}

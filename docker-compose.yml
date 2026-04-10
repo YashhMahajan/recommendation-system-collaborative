@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  movie-recommender:
+    build: .
+    container_name: movie-recommender-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=false
+      - HOST=0.0.0.0
+      - PORT=8000
+      - MODEL_DIR=/app/models
+      - DATA_DIR=/app/processed_data
+      - MAX_RECOMMENDATIONS=50
+      - CACHE_TTL=300
+    volumes:
+      - ./models:/app/models:ro
+      - ./processed_data:/app/processed_data:ro
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add nginx for production
+  nginx:
+    image: nginx:alpine
+    container_name: movie-recommender-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx_fastapi.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - movie-recommender
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  models:
+    driver: local
+  processed_data:
+    driver: local
+  logs:
+    driver: local
+
+networks:
+  default:
+    name: movie-recommender-network
